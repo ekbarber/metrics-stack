@@ -1,0 +1,28 @@
+version: '3'
+services:
+  influxdb:
+    image: influxdb:1.8
+    ports:
+      - "8086:8086"
+    container_name: influxdb
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    ports:
+        - "8125:8125/udp"
+    links:
+      - influxdb
+    volumes:
+      - "./telegraf.conf:/etc/telegraf/telegraf.conf:ro"
+    depends_on:
+      - influxdb
+  grafana:
+    image: grafana/grafana:7.1.5
+    container_name: grafana
+    ports:
+      - '3333:3000'
+    volumes: 
+      - grafana:/var/lib/grafana
+volumes:
+  grafana:  
+
